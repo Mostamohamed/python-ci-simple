@@ -1,6 +1,6 @@
 @Library('my-shared-lib') _
 
-node() {   // التشغيل على Jenkins master
+node() {  
     // Parameters
     properties([
         parameters([
@@ -19,7 +19,7 @@ node() {   // التشغيل على Jenkins master
             branches: [[name: "*/${branch}"]],
             userRemoteConfigs: [[
                 url: 'https://github.com/Mostamohamed/python-ci-simple.git',
-                credentialsId: 'github'  // معرف الـcredential اللي أضفته
+                credentialsId: 'github'  
             ]]
         ])
     }
@@ -27,7 +27,7 @@ node() {   // التشغيل على Jenkins master
     // Parallel jobs
     def jobs = [:]
     for (int i = 1; i <= workers; i++) {
-        def idx = i  // مهم لـ closure
+        def idx = i  
         jobs["worker-${idx}"] = {
             stage("Build-${idx}") {
                 sh "echo '🔧 Running worker ${idx} on master'"
