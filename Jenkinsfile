@@ -1,6 +1,6 @@
 @Library('my-shared-lib') _
 
-node() {   // هنا نضمن التشغيل على Jenkins master
+node() {   // التشغيل على Jenkins master
     // Parameters
     properties([
         parameters([
@@ -16,14 +16,18 @@ node() {   // هنا نضمن التشغيل على Jenkins master
 
     stage('Checkout') {
         checkout([$class: 'GitSCM',
-                  branches: [[name: "*/${branch}"]],
-                  userRemoteConfigs: [[url: 'https://github.com/USERNAME/python-ci-simple.git']]])
+            branches: [[name: "*/${branch}"]],
+            userRemoteConfigs: [[
+                url: 'https://github.com/Mostamohamed/python-ci-simple.git',
+                credentialsId: 'github'  // معرف الـcredential اللي أضفته
+            ]]
+        ])
     }
 
     // Parallel jobs
     def jobs = [:]
     for (int i = 1; i <= workers; i++) {
-        def idx = i
+        def idx = i  // مهم لـ closure
         jobs["worker-${idx}"] = {
             stage("Build-${idx}") {
                 sh "echo '🔧 Running worker ${idx} on master'"
