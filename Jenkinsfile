@@ -1,6 +1,7 @@
 @Library('my-shared-lib') _
 
-node {
+node('master') {   // هنا نضمن التشغيل على Jenkins master
+    // Parameters
     properties([
         parameters([
             choice(name: 'LANG', choices: ['python'], description: 'Choose language'),
@@ -14,15 +15,18 @@ node {
     def workers = bounds.toInt(params.PARALLEL_WORKERS, 1, 5)
 
     stage('Checkout') {
-        checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], userRemoteConfigs: [[url: 'https://github.com/USERNAME/python-ci-simple.git']]])
+        checkout([$class: 'GitSCM',
+                  branches: [[name: "*/${branch}"]],
+                  userRemoteConfigs: [[url: 'https://github.com/USERNAME/python-ci-simple.git']]])
     }
 
+    // Parallel jobs
     def jobs = [:]
     for (int i = 1; i <= workers; i++) {
         def idx = i
         jobs["worker-${idx}"] = {
             stage("Build-${idx}") {
-                sh "echo '🔧 Running worker ${idx}'"
+                sh "echo '🔧 Running worker ${idx} on master'"
                 sh "python3 main.py ${idx}"
             }
             stage("Test-${idx}") {
