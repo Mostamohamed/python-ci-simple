@@ -1,6 +1,6 @@
 @Library('my-shared-lib') _
 
-node('master') {   // هنا نضمن التشغيل على Jenkins master
+node() {   // هنا نضمن التشغيل على Jenkins master
     // Parameters
     properties([
         parameters([
