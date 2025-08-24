@@ -35,6 +35,8 @@ node() {   // التشغيل على Jenkins master
             }
             stage("Test-${idx}") {
                 sh """
+                pip3 install -r requirements.txt || true
+                pytest -q || true
                 python3 -m venv .venv || true
                 . .venv/bin/activate
                 pip install -r requirements.txt
